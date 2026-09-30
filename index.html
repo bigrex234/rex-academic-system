@@ -7,788 +7,915 @@
     <title>REX // Academic System</title>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
-
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
 
         :root {
-            --bg: #050607;
-            --panel: #0a0c0e;
-            --panel-2: #0d1012;
-            --border: rgba(255,255,255,0.07);
-            --text: #eeeeee;
-            --muted: #777d82;
-            --red: #b91c2b;
-            --red-bright: #e3263b;
-            --green: #43d17b;
-            --orange: #d89b42;
+            --bg: #050505;
+            --panel: #0b0b0d;
+            --panel-2: #101013;
+            --border: rgba(255,255,255,0.08);
+
+            --text: #f4f4f4;
+            --muted: #85858c;
+
+            --red: #ff3030;
+            --green: #35e58c;
         }
 
         body {
             min-height: 100vh;
+
             background:
                 radial-gradient(
-                    circle at 50% -10%,
-                    rgba(185, 28, 43, 0.13),
+                    circle at 50% -20%,
+                    rgba(255, 30, 30, 0.08),
                     transparent 35%
                 ),
-                linear-gradient(180deg, #060708 0%, #030405 100%);
+                linear-gradient(
+                    rgba(255,255,255,0.018) 1px,
+                    transparent 1px
+                ),
+                linear-gradient(
+                    90deg,
+                    rgba(255,255,255,0.018) 1px,
+                    transparent 1px
+                ),
+                var(--bg);
+
+            background-size:
+                auto,
+                40px 40px,
+                40px 40px;
+
             color: var(--text);
-            font-family: Inter, sans-serif;
-            overflow-x: hidden;
+
+            font-family:
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
         }
-
-        /* subtle background grid */
-
-        body::before {
-            content: "";
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            opacity: 0.18;
-
-            background-image:
-                linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
-
-            background-size: 50px 50px;
-
-            mask-image: linear-gradient(
-                to bottom,
-                black,
-                transparent 80%
-            );
-        }
-
-        /* scan line */
 
         body::after {
             content: "";
+
             position: fixed;
-            left: 0;
-            right: 0;
-            top: 0;
-            height: 1px;
-
-            background: rgba(255,255,255,0.08);
-
-            animation: scan 8s linear infinite;
+            inset: 0;
 
             pointer-events: none;
-            z-index: 10;
+
+            background:
+                repeating-linear-gradient(
+                    to bottom,
+                    transparent,
+                    transparent 3px,
+                    rgba(255,255,255,0.012) 4px
+                );
         }
 
-        @keyframes scan {
-            0% {
-                transform: translateY(-10px);
-            }
-
-            100% {
-                transform: translateY(100vh);
-            }
-        }
-
-        .container {
-            width: min(1250px, 92%);
-            margin: auto;
-            padding: 35px 0 70px;
-        }
-
-        /* HEADER */
+        /* =========================================
+           HEADER
+        ========================================= */
 
         header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            width: min(1200px, 92%);
 
-            margin-bottom: 55px;
-        }
+            margin: auto;
+            padding: 26px 0 20px;
 
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 13px;
-        }
-
-        .brand-mark {
-            width: 38px;
-            height: 38px;
-
-            display: grid;
-            place-items: center;
-
-            border: 1px solid rgba(227,38,59,0.4);
-
-            color: var(--red-bright);
-
-            font-family: "JetBrains Mono", monospace;
-            font-size: 13px;
-            font-weight: 600;
-
-            background: rgba(185,28,43,0.05);
-        }
-
-        .brand-info h1 {
-            font-size: 14px;
-            letter-spacing: 0.15em;
-            font-weight: 600;
-        }
-
-        .brand-info span {
-            display: block;
-            margin-top: 4px;
-
-            color: var(--muted);
-
-            font-family: "JetBrains Mono", monospace;
-            font-size: 9px;
-            letter-spacing: 0.15em;
-        }
-
-        .system-clock {
-            text-align: right;
-        }
-
-        .system-clock .time {
-            font-family: "JetBrains Mono", monospace;
-            font-size: 14px;
-            letter-spacing: 0.08em;
-        }
-
-        .system-clock .date {
-            margin-top: 5px;
-
-            color: var(--muted);
-
-            font-family: "JetBrains Mono", monospace;
-            font-size: 9px;
-            letter-spacing: 0.1em;
-        }
-
-        /* HERO */
-
-        .hero {
-            display: grid;
-            grid-template-columns: 1.35fr 0.65fr;
-            gap: 18px;
-            margin-bottom: 18px;
-        }
-
-        .main-status,
-        .side-panel,
-        .schedule-panel {
-            border: 1px solid var(--border);
-            background:
-                linear-gradient(
-                    145deg,
-                    rgba(255,255,255,0.035),
-                    rgba(255,255,255,0.012)
-                );
-            backdrop-filter: blur(18px);
-        }
-
-        .main-status {
-            min-height: 440px;
-            padding: 42px;
-
-            position: relative;
-            overflow: hidden;
-        }
-
-        .main-status::before {
-            content: "";
-
-            position: absolute;
-            width: 250px;
-            height: 250px;
-
-            right: -120px;
-            top: -120px;
-
-            background: radial-gradient(
-                circle,
-                rgba(185,28,43,0.18),
-                transparent 70%
-            );
-        }
-
-        .status-label {
-            display: flex;
-            align-items: center;
-            gap: 9px;
-
-            color: var(--muted);
-
-            font-family: "JetBrains Mono", monospace;
-            font-size: 10px;
-            letter-spacing: 0.18em;
-        }
-
-        .status-dot {
-            width: 7px;
-            height: 7px;
-
-            border-radius: 50%;
-            background: var(--red-bright);
-
-            box-shadow: 0 0 12px rgba(227,38,59,0.6);
-        }
-
-        .status-dot.green {
-            background: var(--green);
-            box-shadow: 0 0 12px rgba(67,209,123,0.6);
-        }
-
-        .status-title {
-            margin-top: 55px;
-
-            color: #666c71;
-
-            font-family: "JetBrains Mono", monospace;
-            font-size: 11px;
-            letter-spacing: 0.25em;
-        }
-
-        .course-name {
-            margin-top: 10px;
-
-            font-size: clamp(32px, 5vw, 62px);
-            line-height: 1;
-            letter-spacing: -0.045em;
-        }
-
-        .course-code {
-            margin-top: 13px;
-
-            color: var(--red-bright);
-
-            font-family: "JetBrains Mono", monospace;
-            font-size: 12px;
-            letter-spacing: 0.16em;
-        }
-
-        .countdown {
-            margin-top: 45px;
-
-            font-family: "JetBrains Mono", monospace;
-            font-size: clamp(35px, 5vw, 65px);
-            font-weight: 500;
-            letter-spacing: -0.05em;
-        }
-
-        .countdown-label {
-            margin-top: 7px;
-
-            color: var(--muted);
-
-            font-size: 10px;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-        }
-
-        .class-meta {
-            position: absolute;
-            bottom: 35px;
-            left: 42px;
-            right: 42px;
-
-            display: flex;
-            gap: 40px;
-
-            padding-top: 20px;
-
-            border-top: 1px solid var(--border);
-        }
-
-        .meta-item span {
-            display: block;
-
-            color: #5f6569;
-
-            font-family: "JetBrains Mono", monospace;
-            font-size: 8px;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-        }
-
-        .meta-item strong {
-            display: block;
-            margin-top: 5px;
-
-            font-size: 12px;
-            font-weight: 500;
-        }
-
-        /* SIDE */
-
-        .side-panel {
-            padding: 28px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .panel-heading {
             display: flex;
             justify-content: space-between;
             align-items: center;
 
-            padding-bottom: 18px;
+            gap: 20px;
+
             border-bottom: 1px solid var(--border);
         }
 
-        .panel-heading h2 {
-            font-size: 11px;
-            font-family: "JetBrains Mono", monospace;
-            font-weight: 500;
-            letter-spacing: 0.14em;
+        .logo {
+            font-size: 14px;
+
+            font-weight: 800;
+
+            letter-spacing: 2px;
         }
 
-        .panel-heading span {
+        .logo span {
+            color: var(--red);
+        }
+
+        .updates-link {
+            padding: 9px 13px;
+
+            border: 1px solid var(--border);
+            border-radius: 6px;
+
+            color: #aaa;
+
+            text-decoration: none;
+
+            font-size: 10px;
+
+            font-weight: 700;
+
+            letter-spacing: 1px;
+
+            background:
+                rgba(255,255,255,0.02);
+
+            transition:
+                color .2s ease,
+                border-color .2s ease,
+                background .2s ease,
+                transform .2s ease;
+        }
+
+        .updates-link:hover {
+            color: #fff;
+
+            border-color:
+                rgba(255,48,48,.5);
+
+            background:
+                rgba(255,48,48,.08);
+
+            transform:
+                translateY(-1px);
+        }
+
+
+        /* =========================================
+           MAIN
+        ========================================= */
+
+        main {
+            width: min(1200px, 92%);
+
+            margin: auto;
+
+            padding-bottom: 60px;
+        }
+
+
+        /* =========================================
+           TOP SECTION
+        ========================================= */
+
+        .top-section {
+            padding: 45px 0 30px;
+
+            display: grid;
+
+            grid-template-columns:
+                1fr
+                auto;
+
+            align-items: end;
+
+            gap: 30px;
+        }
+
+        .eyebrow {
+            color: var(--red);
+
+            font-size: 10px;
+
+            font-weight: 800;
+
+            letter-spacing: 3px;
+
+            margin-bottom: 12px;
+        }
+
+        h1 {
+            font-size:
+                clamp(34px, 6vw, 62px);
+
+            line-height: .95;
+
+            letter-spacing: -3px;
+        }
+
+        .subtitle {
+            margin-top: 15px;
+
+            max-width: 620px;
+
             color: var(--muted);
-            font-family: "JetBrains Mono", monospace;
-            font-size: 9px;
+
+            font-size: 13px;
+
+            line-height: 1.7;
         }
 
-        .next-course {
-            margin-top: 25px;
+
+        /* =========================================
+           CLOCK
+        ========================================= */
+
+        .clock-box {
+            min-width: 190px;
+
+            text-align: right;
         }
 
-        .next-course .label {
+        #clock {
+            font-size: 26px;
+
+            font-weight: 700;
+
+            letter-spacing: -1px;
+        }
+
+        #date {
+            margin-top: 5px;
+
             color: var(--muted);
 
-            font-family: "JetBrains Mono", monospace;
+            font-size: 10px;
+
+            letter-spacing: 1px;
+        }
+
+
+        /* =========================================
+           CURRENT CLASS
+        ========================================= */
+
+        .current-section {
+            display: grid;
+
+            grid-template-columns:
+                minmax(0, 1.4fr)
+                minmax(260px, .6fr);
+
+            gap: 16px;
+
+            margin-bottom: 18px;
+        }
+
+        .current-card,
+        .next-card {
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255,255,255,.025),
+                    transparent
+                ),
+                var(--panel);
+
+            border: 1px solid var(--border);
+
+            border-radius: 12px;
+
+            padding: 25px;
+        }
+
+        .panel-label {
+            color: var(--muted);
+
             font-size: 9px;
-            letter-spacing: 0.14em;
+
+            font-weight: 800;
+
+            letter-spacing: 2px;
+
+            margin-bottom: 18px;
         }
 
-        .next-course h3 {
-            margin-top: 12px;
+        .current-status {
+            display: inline-block;
 
-            font-size: 27px;
-            line-height: 1.1;
+            padding: 6px 9px;
+
+            margin-bottom: 15px;
+
+            border-radius: 5px;
+
+            background:
+                rgba(255,48,48,.1);
+
+            color: #ff5959;
+
+            font-size: 9px;
+
+            font-weight: 800;
+
+            letter-spacing: 1.5px;
         }
 
-        .next-course .code {
-            margin-top: 8px;
+        .current-status.active {
+            background:
+                rgba(53,229,140,.1);
 
-            color: var(--red-bright);
+            color: var(--green);
+        }
 
-            font-family: "JetBrains Mono", monospace;
+        .current-title {
+            font-size: clamp(25px, 4vw, 42px);
+
+            line-height: 1.05;
+
+            letter-spacing: -1.5px;
+
+            margin-bottom: 12px;
+        }
+
+        .current-code {
+            color: var(--red);
+
+            font-size: 12px;
+
+            font-weight: 800;
+
+            letter-spacing: 1px;
+
+            margin-bottom: 18px;
+        }
+
+        .current-info {
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 10px;
+        }
+
+        .info-item {
+            padding: 8px 10px;
+
+            background:
+                rgba(255,255,255,.025);
+
+            border: 1px solid var(--border);
+
+            border-radius: 5px;
+
+            color: #999;
+
             font-size: 10px;
         }
 
-        .next-info {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-
-            margin-top: 28px;
-        }
-
-        .info-box {
-            padding: 15px;
-
-            border: 1px solid var(--border);
-            background: rgba(0,0,0,0.15);
-        }
-
-        .info-box span {
-            color: #5f6569;
-
-            font-family: "JetBrains Mono", monospace;
-            font-size: 8px;
-        }
-
-        .info-box strong {
-            display: block;
-            margin-top: 7px;
-
-            font-family: "JetBrains Mono", monospace;
-            font-size: 12px;
-            font-weight: 500;
-        }
-
-        .progress-section {
+        .countdown {
             margin-top: 25px;
+
+            font-size: clamp(28px, 5vw, 50px);
+
+            font-weight: 800;
+
+            letter-spacing: -2px;
+        }
+
+        .countdown-label {
+            color: var(--muted);
+
+            font-size: 9px;
+
+            letter-spacing: 2px;
+        }
+
+
+        /* =========================================
+           NEXT OPERATION
+        ========================================= */
+
+        .next-class-title {
+            font-size: 20px;
+
+            font-weight: 700;
+
+            margin-bottom: 8px;
+        }
+
+        .next-class-code {
+            color: var(--red);
+
+            font-size: 10px;
+
+            font-weight: 800;
+
+            letter-spacing: 1px;
+
+            margin-bottom: 18px;
+        }
+
+        .next-details {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 10px;
+        }
+
+        .next-detail {
+            display: flex;
+
+            justify-content: space-between;
+
+            gap: 15px;
+
+            color: var(--muted);
+
+            font-size: 10px;
+        }
+
+        .next-detail strong {
+            color: #ddd;
+
+            font-weight: 600;
+
+            text-align: right;
+        }
+
+
+        /* =========================================
+           PROGRESS
+        ========================================= */
+
+        .progress-wrapper {
+            margin-top: 20px;
         }
 
         .progress-top {
             display: flex;
+
             justify-content: space-between;
 
-            margin-bottom: 9px;
+            margin-bottom: 8px;
 
             color: var(--muted);
 
-            font-family: "JetBrains Mono", monospace;
-            font-size: 8px;
+            font-size: 9px;
+
+            letter-spacing: 1px;
         }
 
-        .progress {
-            height: 3px;
+        .progress-bar {
+            height: 4px;
 
-            background: rgba(255,255,255,0.07);
+            width: 100%;
+
+            background:
+                rgba(255,255,255,.06);
+
+            border-radius: 10px;
+
+            overflow: hidden;
         }
 
-        .progress-fill {
+        #progress {
             height: 100%;
+
             width: 0%;
 
-            background: var(--red-bright);
+            background: var(--red);
 
-            box-shadow: 0 0 12px rgba(227,38,59,0.4);
-
-            transition: width 0.5s ease;
+            transition: width .5s ease;
         }
 
-        /* SCHEDULE */
 
-        .schedule-panel {
-            padding: 28px;
+        /* =========================================
+           TIMETABLE
+        ========================================= */
+
+        .section-title {
+            margin-top: 35px;
+
+            margin-bottom: 15px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
         }
 
-        .week-grid {
-            margin-top: 20px;
+        .section-title h2 {
+            font-size: 12px;
 
+            letter-spacing: 2px;
+
+            font-weight: 800;
+        }
+
+        .section-title span {
+            color: var(--muted);
+
+            font-size: 9px;
+
+            letter-spacing: 1px;
+        }
+
+        .timetable {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
+
+            grid-template-columns:
+                repeat(5, 1fr);
+
             gap: 10px;
         }
 
         .day {
-            min-height: 230px;
-
-            padding: 17px;
+            background: var(--panel);
 
             border: 1px solid var(--border);
-            background: rgba(0,0,0,0.16);
 
-            transition: 0.25s ease;
+            border-radius: 10px;
+
+            overflow: hidden;
+
+            min-width: 0;
         }
 
-        .day.active {
-            border-color: rgba(227,38,59,0.35);
-
-            background:
-                linear-gradient(
-                    160deg,
-                    rgba(185,28,43,0.08),
-                    rgba(0,0,0,0.2)
-                );
-        }
-
-        .day-name {
-            display: flex;
-            justify-content: space-between;
-
-            padding-bottom: 14px;
+        .day-header {
+            padding: 13px;
 
             border-bottom: 1px solid var(--border);
 
-            font-family: "JetBrains Mono", monospace;
-            font-size: 9px;
-            letter-spacing: 0.12em;
-        }
-
-        .day-name .today {
-            color: var(--red-bright);
-            font-size: 7px;
-        }
-
-        .class-card {
-            margin-top: 12px;
-            padding: 11px;
-
-            border-left: 2px solid rgba(255,255,255,0.1);
-
-            background: rgba(255,255,255,0.02);
-        }
-
-        .class-card.active {
-            border-left-color: var(--green);
-            background: rgba(67,209,123,0.04);
-        }
-
-        .class-card.done {
-            opacity: 0.35;
-        }
-
-        .class-time {
             color: var(--muted);
 
-            font-family: "JetBrains Mono", monospace;
-            font-size: 8px;
+            font-size: 9px;
+
+            font-weight: 800;
+
+            letter-spacing: 1.5px;
         }
 
-        .class-card h4 {
-            margin-top: 6px;
-
-            font-size: 12px;
-            font-weight: 600;
+        .day.today {
+            border-color:
+                rgba(255,48,48,.35);
         }
 
-        .class-room {
-            margin-top: 5px;
+        .day.today .day-header {
+            color: var(--red);
 
-            color: #666c71;
-
-            font-family: "JetBrains Mono", monospace;
-            font-size: 8px;
+            background:
+                rgba(255,48,48,.04);
         }
 
-        /* FOOTER */
+        .class {
+            padding: 15px 13px;
 
-        footer {
-            display: flex;
-            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
 
-            margin-top: 25px;
-
-            color: #464b4f;
-
-            font-family: "JetBrains Mono", monospace;
-            font-size: 8px;
-            letter-spacing: 0.1em;
+            transition: .2s ease;
         }
 
-        .online {
+        .class:last-child {
+            border-bottom: none;
+        }
+
+        .class.completed {
+            opacity: .35;
+        }
+
+        .class.active {
+            background:
+                rgba(53,229,140,.05);
+
+            border-left:
+                2px solid var(--green);
+
+            opacity: 1;
+        }
+
+        .class-code {
+            color: var(--red);
+
+            font-size: 9px;
+
+            font-weight: 800;
+
+            letter-spacing: .5px;
+
+            margin-bottom: 6px;
+        }
+
+        .class.active .class-code {
             color: var(--green);
         }
 
-        /* MOBILE */
+        .class-name {
+            font-size: 11px;
+
+            line-height: 1.4;
+
+            font-weight: 600;
+
+            margin-bottom: 9px;
+        }
+
+        .class-meta {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 4px;
+
+            color: var(--muted);
+
+            font-size: 8px;
+        }
+
+
+        /* =========================================
+           FOOTER
+        ========================================= */
+
+        footer {
+            width: min(1200px, 92%);
+
+            margin: auto;
+
+            padding:
+                25px 0
+                40px;
+
+            border-top:
+                1px solid var(--border);
+
+            text-align: center;
+
+            color: #555;
+
+            font-size: 9px;
+
+            letter-spacing: 1px;
+        }
+
+
+        /* =========================================
+           MOBILE
+        ========================================= */
 
         @media (max-width: 900px) {
 
-            .hero {
+            .timetable {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .current-section {
                 grid-template-columns: 1fr;
             }
 
-            .week-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .day {
-                min-height: auto;
-            }
-
-            .main-status {
-                min-height: 410px;
-            }
         }
 
-        @media (max-width: 600px) {
-
-            .container {
-                width: 94%;
-                padding-top: 22px;
-            }
+        @media (max-width: 650px) {
 
             header {
-                margin-bottom: 30px;
-            }
+                align-items: flex-start;
 
-            .system-clock {
-                display: none;
-            }
-
-            .main-status {
-                padding: 27px;
-                min-height: 390px;
-            }
-
-            .status-title {
-                margin-top: 40px;
-            }
-
-            .countdown {
-                margin-top: 35px;
-            }
-
-            .class-meta {
-                left: 27px;
-                right: 27px;
-                bottom: 25px;
-
-                gap: 22px;
-            }
-
-            .side-panel,
-            .schedule-panel {
-                padding: 22px;
-            }
-
-            .course-name {
-                font-size: 38px;
-            }
-
-            footer {
                 flex-direction: column;
-                gap: 8px;
             }
+
+            .top-section {
+                grid-template-columns: 1fr;
+
+                padding-top: 35px;
+            }
+
+            .clock-box {
+                text-align: left;
+            }
+
+            .timetable {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                letter-spacing: -2px;
+            }
+
         }
     </style>
 </head>
 
+
 <body>
 
-<div class="container">
 
-    <!-- HEADER -->
+    <!-- =========================================
+         HEADER
+    ========================================== -->
 
     <header>
 
-        <div class="brand">
-
-            <div class="brand-mark">
-                RX
-            </div>
-
-            <div class="brand-info">
-                <h1>REX // ACADEMIC SYSTEM</h1>
-
-                <span>
-                    SOFTWARE ENGINEERING · 200 LEVEL
-                </span>
-            </div>
-
+        <div class="logo">
+            REX <span>//</span> ACADEMIC SYSTEM
         </div>
 
-        <div class="system-clock">
 
-            <div class="time" id="clock">
-                00:00:00
-            </div>
+        <!-- LINK TO LIVE UPDATES -->
 
-            <div class="date" id="date">
-                LOADING DATE...
-            </div>
-
-        </div>
+        <a
+            href="updates.html"
+            class="updates-link"
+        >
+            INTELLIGENCE HUB ↗
+        </a>
 
     </header>
 
 
-    <!-- MAIN HERO -->
 
-    <section class="hero">
-
-        <!-- LIVE STATUS -->
-
-        <div class="main-status">
-
-            <div class="status-label">
-
-                <div class="status-dot" id="statusDot"></div>
-
-                <span id="statusText">
-                    SYSTEM ACTIVE
-                </span>
-
-            </div>
+    <main>
 
 
-            <div class="status-title" id="statusTitle">
-                NEXT CLASS
-            </div>
+        <!-- =========================================
+             HERO
+        ========================================== -->
 
-
-            <div class="course-name" id="courseName">
-                Loading...
-            </div>
-
-
-            <div class="course-code" id="courseCode">
-                ---
-            </div>
-
-
-            <div class="countdown" id="countdown">
-                00:00:00
-            </div>
-
-
-            <div class="countdown-label" id="countdownLabel">
-                calculating...
-            </div>
-
-
-            <div class="class-meta">
-
-                <div class="meta-item">
-                    <span>TIME</span>
-                    <strong id="classTime">--:--</strong>
-                </div>
-
-                <div class="meta-item">
-                    <span>VENUE</span>
-                    <strong id="classVenue">---</strong>
-                </div>
-
-                <div class="meta-item">
-                    <span>DAY</span>
-                    <strong id="classDay">---</strong>
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- NEXT CLASS -->
-
-        <div class="side-panel">
+        <section class="top-section">
 
             <div>
 
-                <div class="panel-heading">
+                <div class="eyebrow">
+                    200 LEVEL // SOFTWARE ENGINEERING
+                </div>
 
-                    <h2>NEXT OPERATION</h2>
+                <h1>
+                    Academic<br>
+                    System.
+                </h1>
 
-                    <span id="nextDay">
-                        ---
-                    </span>
+                <p class="subtitle">
+                    Personal academic command center for
+                    tracking classes, schedules, progress
+                    and upcoming operations.
+                </p>
 
+            </div>
+
+
+            <div class="clock-box">
+
+                <div id="clock">
+                    --:--:--
+                </div>
+
+                <div id="date">
+                    LOADING DATE...
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================================
+             CURRENT + NEXT CLASS
+        ========================================== -->
+
+        <section class="current-section">
+
+
+            <!-- CURRENT CLASS -->
+
+            <div class="current-card">
+
+                <div class="panel-label">
+                    CURRENT CLASS
                 </div>
 
 
-                <div class="next-course">
+                <div
+                    id="currentStatus"
+                    class="current-status"
+                >
+                    CHECKING...
+                </div>
 
-                    <div class="label">
-                        UPCOMING
+
+                <div
+                    id="currentTitle"
+                    class="current-title"
+                >
+                    Loading...
+                </div>
+
+
+                <div
+                    id="currentCode"
+                    class="current-code"
+                >
+                    --
+                </div>
+
+
+                <div
+                    id="currentInfo"
+                    class="current-info"
+                >
+                </div>
+
+
+                <div
+                    id="countdown"
+                    class="countdown"
+                >
+                    --:--:--
+                </div>
+
+
+                <div class="countdown-label">
+                    TIME REMAINING
+                </div>
+
+
+                <div class="progress-wrapper">
+
+                    <div class="progress-top">
+
+                        <span>
+                            CLASS PROGRESS
+                        </span>
+
+                        <span id="progressText">
+                            0%
+                        </span>
+
                     </div>
 
-                    <h3 id="nextCourse">
-                        ---
-                    </h3>
 
-                    <div class="code" id="nextCode">
-                        ---
+                    <div class="progress-bar">
+
+                        <div
+                            id="progress"
+                        ></div>
+
                     </div>
 
                 </div>
 
+            </div>
 
-                <div class="next-info">
 
-                    <div class="info-box">
 
-                        <span>START</span>
+            <!-- NEXT CLASS -->
 
-                        <strong id="nextStart">
+            <div class="next-card">
+
+                <div class="panel-label">
+                    NEXT OPERATION
+                </div>
+
+
+                <div
+                    id="nextTitle"
+                    class="next-class-title"
+                >
+                    Loading...
+                </div>
+
+
+                <div
+                    id="nextCode"
+                    class="next-class-code"
+                >
+                    --
+                </div>
+
+
+                <div class="next-details">
+
+                    <div class="next-detail">
+
+                        <span>
+                            DAY
+                        </span>
+
+                        <strong id="nextDay">
                             --
                         </strong>
 
                     </div>
 
 
-                    <div class="info-box">
+                    <div class="next-detail">
 
-                        <span>LOCATION</span>
+                        <span>
+                            TIME
+                        </span>
+
+                        <strong id="nextTime">
+                            --
+                        </strong>
+
+                    </div>
+
+
+                    <div class="next-detail">
+
+                        <span>
+                            VENUE
+                        </span>
 
                         <strong id="nextVenue">
                             --
@@ -800,134 +927,74 @@
 
             </div>
 
-
-            <div class="progress-section">
-
-                <div class="progress-top">
-
-                    <span>
-                        TIME PROGRESSION
-                    </span>
-
-                    <span id="progressPercent">
-                        0%
-                    </span>
-
-                </div>
-
-                <div class="progress">
-
-                    <div
-                        class="progress-fill"
-                        id="progressFill">
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </section>
+        </section>
 
 
-    <!-- WEEKLY SCHEDULE -->
 
-    <section class="schedule-panel">
+        <!-- =========================================
+             TIMETABLE
+        ========================================== -->
 
-        <div class="panel-heading">
+        <div class="section-title">
 
-            <h2>WEEKLY SCHEDULE</h2>
+            <h2>
+                WEEKLY TIMETABLE
+            </h2>
 
             <span>
-                200L · SEM 1
+                LIVE SCHEDULE
             </span>
 
         </div>
 
 
-        <div class="week-grid" id="weekGrid">
-            <!-- Generated by JS -->
-        </div>
+        <section
+            id="timetable"
+            class="timetable"
+        >
+        </section>
 
-    </section>
+
+    </main>
+
 
 
     <footer>
-
-        <span>
-            REX // ACADEMIC MONITOR v1.0
-        </span>
-
-        <span>
-            STATUS:
-            <b class="online">ONLINE</b>
-        </span>
-
+        REX // ACADEMIC SYSTEM
+        <br><br>
+        SOFTWARE ENGINEERING // FUNAAB
     </footer>
 
-</div>
 
 
-<script>
+    <script>
 
-    /*
-        ==========================================
-        REX ACADEMIC SYSTEM
-        ==========================================
+        /* =========================================
+           COURSE DATA
+        ========================================== */
 
-        Current timetable.
+        const classes = [
 
-        Monday:
-        No class
-
-        Tuesday:
-        INS 203 — 11:00 - 13:00 — R206
-
-        Wednesday:
-        MTH 201 — 09:00 - 11:00 — JAO 2
-
-        Thursday:
-        SEN 201 — 09:00 - 11:00 — PISAD AUD
-        COS 201 — 16:00 - 18:00 — IK CAP
-
-        Friday:
-        IFT 211 — 09:00 - 11:00 — CENTS AUD
-        ENT 211 — 11:00 - 13:00 — VIRTUAL
-        CSC 203 — 14:00 - 16:00 — JAO 3
-
-        SEN 203 + SEN 205 are not included yet
-        because they have not been added to the
-        timetable.
-    */
-
-
-    const timetable = {
-
-        1: [],
-
-        2: [
             {
+                day: 2,
                 code: "INS 203",
                 name: "System Analysis & Design",
                 start: "11:00",
                 end: "13:00",
                 venue: "R206"
-            }
-        ],
+            },
 
-        3: [
             {
+                day: 3,
                 code: "MTH 201",
                 name: "Mathematical Method I",
                 start: "09:00",
                 end: "11:00",
                 venue: "JAO 2"
-            }
-        ],
+            },
 
-        4: [
             {
+                day: 4,
                 code: "SEN 201",
                 name: "Introduction to Software Engineering",
                 start: "09:00",
@@ -936,16 +1003,16 @@
             },
 
             {
+                day: 4,
                 code: "COS 201",
                 name: "Computer Programming I",
                 start: "16:00",
                 end: "18:00",
                 venue: "IK CAP"
-            }
-        ],
+            },
 
-        5: [
             {
+                day: 5,
                 code: "IFT 211",
                 name: "Digital Logic Design",
                 start: "09:00",
@@ -954,6 +1021,7 @@
             },
 
             {
+                day: 5,
                 code: "ENT 211",
                 name: "Entrepreneurship & Innovation",
                 start: "11:00",
@@ -962,274 +1030,624 @@
             },
 
             {
+                day: 5,
                 code: "CSC 203",
                 name: "Discrete Structures",
                 start: "14:00",
                 end: "16:00",
                 venue: "JAO 3"
             }
-        ],
 
-        6: [],
-        0: []
-
-    };
+        ];
 
 
-    const dayNames = [
-        "SUNDAY",
-        "MONDAY",
-        "TUESDAY",
-        "WEDNESDAY",
-        "THURSDAY",
-        "FRIDAY",
-        "SATURDAY"
-    ];
+
+        /* =========================================
+           DAY NAMES
+        ========================================== */
+
+        const dayNames = [
+
+            "Sunday",
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday"
+
+        ];
 
 
-    function timeToMinutes(time) {
 
-        const [hours, minutes] = time
-            .split(":")
-            .map(Number);
+        /* =========================================
+           TIME CONVERTER
+        ========================================== */
 
-        return hours * 60 + minutes;
-    }
+        function timeToMinutes(time) {
 
-
-    function formatCountdown(milliseconds) {
-
-        if (milliseconds < 0) {
-            milliseconds = 0;
-        }
-
-        const totalSeconds =
-            Math.floor(milliseconds / 1000);
-
-        const hours =
-            Math.floor(totalSeconds / 3600);
-
-        const minutes =
-            Math.floor((totalSeconds % 3600) / 60);
-
-        const seconds =
-            totalSeconds % 60;
-
-
-        return [
-            String(hours).padStart(2, "0"),
-            String(minutes).padStart(2, "0"),
-            String(seconds).padStart(2, "0")
-        ].join(":");
-    }
-
-
-    function getDateWithTime(date, time) {
-
-        const [hours, minutes] =
-            time.split(":").map(Number);
-
-        const result = new Date(date);
-
-        result.setHours(hours);
-        result.setMinutes(minutes);
-        result.setSeconds(0);
-        result.setMilliseconds(0);
-
-        return result;
-    }
-
-
-    function getCurrentClass() {
-
-        const now = new Date();
-
-        const day = now.getDay();
-
-        const classes = timetable[day] || [];
-
-        const currentMinutes =
-            now.getHours() * 60 + now.getMinutes();
-
-        return classes.find(cls => {
-
-            const start =
-                timeToMinutes(cls.start);
-
-            const end =
-                timeToMinutes(cls.end);
+            const [
+                hours,
+                minutes
+            ] = time.split(":").map(Number);
 
             return (
-                currentMinutes >= start &&
-                currentMinutes < end
+                hours * 60 +
+                minutes
             );
 
-        });
-
-    }
+        }
 
 
-    function getNextClass() {
 
-        const now = new Date();
+        /* =========================================
+           BUILD TIMETABLE
+        ========================================== */
 
-        for (let offset = 0; offset < 8; offset++) {
+        function buildTimetable() {
 
-            const date = new Date(now);
+            const timetable =
+                document.getElementById(
+                    "timetable"
+                );
 
-            date.setDate(
-                now.getDate() + offset
-            );
 
-            const day = date.getDay();
+            timetable.innerHTML = "";
 
-            const classes = timetable[day] || [];
 
-            for (const cls of classes) {
+            for (
+                let day = 1;
+                day <= 5;
+                day++
+            ) {
 
-                const start =
-                    getDateWithTime(date, cls.start);
+                const dayClasses =
+                    classes.filter(
+                        item => item.day === day
+                    );
 
-                if (start > now) {
 
-                    return {
-                        ...cls,
-                        date: start
-                    };
+                const dayElement =
+                    document.createElement("div");
 
-                }
+
+                dayElement.className =
+                    "day";
+
+
+                dayElement.dataset.day =
+                    day;
+
+
+                dayElement.innerHTML = `
+
+                    <div class="day-header">
+                        ${dayNames[day]}
+                    </div>
+
+                `;
+
+
+                dayClasses.forEach(item => {
+
+                    const classElement =
+                        document.createElement("div");
+
+
+                    classElement.className =
+                        "class";
+
+
+                    classElement.dataset.code =
+                        item.code;
+
+
+                    classElement.innerHTML = `
+
+                        <div class="class-code">
+                            ${item.code}
+                        </div>
+
+                        <div class="class-name">
+                            ${item.name}
+                        </div>
+
+                        <div class="class-meta">
+
+                            <span>
+                                ${item.start}
+                                —
+                                ${item.end}
+                            </span>
+
+                            <span>
+                                ${item.venue}
+                            </span>
+
+                        </div>
+
+                    `;
+
+
+                    dayElement.appendChild(
+                        classElement
+                    );
+
+                });
+
+
+                timetable.appendChild(
+                    dayElement
+                );
 
             }
 
         }
 
-        return null;
-    }
 
 
-    function updateClock() {
+        /* =========================================
+           CLOCK
+        ========================================== */
 
-        const now = new Date();
+        function updateClock() {
 
-        document.getElementById("clock")
-            .textContent =
-            now.toLocaleTimeString(
-                "en-NG",
-                {
-                    hour12: false
+            const now =
+                new Date();
+
+
+            const time =
+                now.toLocaleTimeString(
+                    "en-NG",
+                    {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        second: "2-digit",
+                        hour12: false
+                    }
+                );
+
+
+            const date =
+                now.toLocaleDateString(
+                    "en-NG",
+                    {
+                        weekday: "long",
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric"
+                    }
+                );
+
+
+            document.getElementById(
+                "clock"
+            ).textContent = time;
+
+
+            document.getElementById(
+                "date"
+            ).textContent =
+                date.toUpperCase();
+
+        }
+
+
+
+        /* =========================================
+           UPDATE SYSTEM
+        ========================================== */
+
+        function updateSystem() {
+
+            const now =
+                new Date();
+
+
+            const currentDay =
+                now.getDay();
+
+
+            const currentMinutes =
+                now.getHours() * 60 +
+                now.getMinutes();
+
+
+            const todayClasses =
+                classes
+                    .filter(
+                        item =>
+                            item.day === currentDay
+                    )
+                    .sort(
+                        (a, b) =>
+                            timeToMinutes(a.start) -
+                            timeToMinutes(b.start)
+                    );
+
+
+            let activeClass = null;
+
+            let nextClass = null;
+
+
+
+            /* =====================================
+               FIND ACTIVE CLASS
+            ===================================== */
+
+            for (
+                const item of todayClasses
+            ) {
+
+                const start =
+                    timeToMinutes(
+                        item.start
+                    );
+
+
+                const end =
+                    timeToMinutes(
+                        item.end
+                    );
+
+
+                if (
+                    currentMinutes >= start &&
+                    currentMinutes < end
+                ) {
+
+                    activeClass =
+                        item;
+
+                    break;
+
                 }
+
+            }
+
+
+
+            /* =====================================
+               FIND NEXT CLASS
+            ===================================== */
+
+            if (!activeClass) {
+
+                nextClass =
+                    todayClasses.find(
+                        item =>
+                            timeToMinutes(
+                                item.start
+                            ) > currentMinutes
+                    );
+
+            } else {
+
+                nextClass =
+                    todayClasses.find(
+                        item =>
+                            timeToMinutes(
+                                item.start
+                            ) >
+                            timeToMinutes(
+                                activeClass.end
+                            )
+                    );
+
+            }
+
+
+
+            /* =====================================
+               IF NO CLASS TODAY
+            ===================================== */
+
+            if (!activeClass && !nextClass) {
+
+                const upcoming =
+                    classes
+                        .map(item => {
+
+                            let daysUntil =
+                                item.day -
+                                currentDay;
+
+
+                            if (
+                                daysUntil <= 0
+                            ) {
+
+                                daysUntil += 7;
+
+                            }
+
+
+                            return {
+
+                                ...item,
+                                daysUntil
+
+                            };
+
+                        })
+                        .sort(
+                            (a, b) =>
+                                a.daysUntil -
+                                b.daysUntil
+                        );
+
+
+                nextClass =
+                    upcoming[0] || null;
+
+            }
+
+
+
+            /* =====================================
+               DISPLAY ACTIVE CLASS
+            ===================================== */
+
+            if (activeClass) {
+
+                const status =
+                    document.getElementById(
+                        "currentStatus"
+                    );
+
+
+                status.textContent =
+                    "● LIVE NOW";
+
+
+                status.classList.add(
+                    "active"
+                );
+
+
+                document.getElementById(
+                    "currentTitle"
+                ).textContent =
+                    activeClass.name;
+
+
+                document.getElementById(
+                    "currentCode"
+                ).textContent =
+                    activeClass.code;
+
+
+                document.getElementById(
+                    "currentInfo"
+                ).innerHTML = `
+
+                    <div class="info-item">
+                        ${activeClass.start}
+                        —
+                        ${activeClass.end}
+                    </div>
+
+                    <div class="info-item">
+                        ${activeClass.venue}
+                    </div>
+
+                `;
+
+
+                updateCountdown(
+                    activeClass
+                );
+
+            } else {
+
+                const status =
+                    document.getElementById(
+                        "currentStatus"
+                    );
+
+
+                status.textContent =
+                    "NO CLASS RIGHT NOW";
+
+
+                status.classList.remove(
+                    "active"
+                );
+
+
+                document.getElementById(
+                    "currentTitle"
+                ).textContent =
+                    "No Active Class";
+
+
+                document.getElementById(
+                    "currentCode"
+                ).textContent =
+                    "SYSTEM STANDBY";
+
+
+                document.getElementById(
+                    "currentInfo"
+                ).innerHTML = `
+
+                    <div class="info-item">
+                        ${dayNames[currentDay]}
+                    </div>
+
+                    <div class="info-item">
+                        Monitoring schedule
+                    </div>
+
+                `;
+
+
+                document.getElementById(
+                    "countdown"
+                ).textContent =
+                    "--:--:--";
+
+
+                document.getElementById(
+                    "progress"
+                ).style.width =
+                    "0%";
+
+
+                document.getElementById(
+                    "progressText"
+                ).textContent =
+                    "0%";
+
+            }
+
+
+
+            /* =====================================
+               NEXT CLASS
+            ===================================== */
+
+            if (nextClass) {
+
+                document.getElementById(
+                    "nextTitle"
+                ).textContent =
+                    nextClass.name;
+
+
+                document.getElementById(
+                    "nextCode"
+                ).textContent =
+                    nextClass.code;
+
+
+                document.getElementById(
+                    "nextDay"
+                ).textContent =
+                    dayNames[
+                        nextClass.day
+                    ];
+
+
+                document.getElementById(
+                    "nextTime"
+                ).textContent =
+                    `${nextClass.start} — ${nextClass.end}`;
+
+
+                document.getElementById(
+                    "nextVenue"
+                ).textContent =
+                    nextClass.venue;
+
+            } else {
+
+                document.getElementById(
+                    "nextTitle"
+                ).textContent =
+                    "No Upcoming Class";
+
+
+                document.getElementById(
+                    "nextCode"
+                ).textContent =
+                    "--";
+
+
+                document.getElementById(
+                    "nextDay"
+                ).textContent =
+                    "--";
+
+
+                document.getElementById(
+                    "nextTime"
+                ).textContent =
+                    "--";
+
+
+                document.getElementById(
+                    "nextVenue"
+                ).textContent =
+                    "--";
+
+            }
+
+
+
+            updateTimetableVisuals(
+                now
             );
 
-
-        document.getElementById("date")
-            .textContent =
-            now.toLocaleDateString(
-                "en-NG",
-                {
-                    weekday: "long",
-                    day: "2-digit",
-                    month: "long",
-                    year: "numeric"
-                }
-            ).toUpperCase();
-
-    }
+        }
 
 
-    function updateMainStatus() {
 
-        const now = new Date();
+        /* =========================================
+           COUNTDOWN
+        ========================================= */
 
-        const current =
-            getCurrentClass();
+        function updateCountdown(
+            activeClass
+        ) {
 
-        const next =
-            getNextClass();
-
-
-        const statusDot =
-            document.getElementById("statusDot");
-
-        const statusText =
-            document.getElementById("statusText");
-
-        const statusTitle =
-            document.getElementById("statusTitle");
+            const now =
+                new Date();
 
 
-        /*
-            CLASS CURRENTLY RUNNING
-        */
-
-        if (current) {
-
-            statusDot.classList.add("green");
-
-            statusText.textContent =
-                "CLASS IN PROGRESS";
-
-            statusTitle.textContent =
-                "CURRENT CLASS";
-
-
-            document.getElementById("courseName")
-                .textContent =
-                current.name;
-
-
-            document.getElementById("courseCode")
-                .textContent =
-                current.code;
+            const endParts =
+                activeClass.end
+                    .split(":")
+                    .map(Number);
 
 
             const end =
-                getDateWithTime(
-                    now,
-                    current.end
-                );
+                new Date(now);
+
+
+            end.setHours(
+                endParts[0],
+                endParts[1],
+                0,
+                0
+            );
+
+
+            const startParts =
+                activeClass.start
+                    .split(":")
+                    .map(Number);
 
 
             const start =
-                getDateWithTime(
-                    now,
-                    current.start
-                );
+                new Date(now);
 
 
-            document.getElementById("countdown")
-                .textContent =
-                formatCountdown(
+            start.setHours(
+                startParts[0],
+                startParts[1],
+                0,
+                0
+            );
+
+
+            const remaining =
+                Math.max(
+                    0,
                     end - now
                 );
-
-
-            document.getElementById("countdownLabel")
-                .textContent =
-                "TIME REMAINING";
-
-
-            document.getElementById("classTime")
-                .textContent =
-                `${current.start} — ${current.end}`;
-
-
-            document.getElementById("classVenue")
-                .textContent =
-                current.venue;
-
-
-            document.getElementById("classDay")
-                .textContent =
-                dayNames[now.getDay()];
 
 
             const total =
                 end - start;
 
+
             const elapsed =
                 now - start;
 
-            const progress =
+
+            const percentage =
                 Math.min(
                     100,
                     Math.max(
@@ -1239,318 +1657,133 @@
                 );
 
 
-            document.getElementById("progressFill")
-                .style.width =
-                `${progress}%`;
+            const seconds =
+                Math.floor(
+                    remaining / 1000
+                );
 
 
-            document.getElementById("progressPercent")
-                .textContent =
-                `${Math.round(progress)}%`;
+            const hours =
+                Math.floor(
+                    seconds / 3600
+                );
 
-            return;
+
+            const minutes =
+                Math.floor(
+                    (seconds % 3600) / 60
+                );
+
+
+            const secs =
+                seconds % 60;
+
+
+            document.getElementById(
+                "countdown"
+            ).textContent =
+
+                `${String(hours).padStart(2, "0")}:` +
+                `${String(minutes).padStart(2, "0")}:` +
+                `${String(secs).padStart(2, "0")}`;
+
+
+            document.getElementById(
+                "progress"
+            ).style.width =
+                `${percentage}%`;
+
+
+            document.getElementById(
+                "progressText"
+            ).textContent =
+                `${Math.round(percentage)}%`;
+
         }
 
 
-        /*
-            NO CURRENT CLASS
-            SHOW NEXT CLASS
-        */
 
-        statusDot.classList.remove("green");
+        /* =========================================
+           TIMETABLE VISUALS
+        ========================================= */
 
-        statusText.textContent =
-            "SYSTEM ACTIVE";
-
-        statusTitle.textContent =
-            "NEXT CLASS";
-
-
-        if (!next) {
-
-            document.getElementById("courseName")
-                .textContent =
-                "No classes";
-
-            document.getElementById("courseCode")
-                .textContent =
-                "---";
-
-            document.getElementById("countdown")
-                .textContent =
-                "--:--:--";
-
-            document.getElementById("countdownLabel")
-                .textContent =
-                "SCHEDULE CLEAR";
-
-            return;
-        }
-
-
-        document.getElementById("courseName")
-            .textContent =
-            next.name;
-
-
-        document.getElementById("courseCode")
-            .textContent =
-            next.code;
-
-
-        document.getElementById("countdown")
-            .textContent =
-            formatCountdown(
-                next.date - now
-            );
-
-
-        document.getElementById("countdownLabel")
-            .textContent =
-            "TIME UNTIL CLASS";
-
-
-        document.getElementById("classTime")
-            .textContent =
-            `${next.start} — ${next.end}`;
-
-
-        document.getElementById("classVenue")
-            .textContent =
-            next.venue;
-
-
-        document.getElementById("classDay")
-            .textContent =
-            dayNames[
-                next.date.getDay()
-            ];
-
-
-        /*
-            Progress toward next class
-        */
-
-        const previous =
-            new Date(next.date);
-
-        previous.setMinutes(
-            previous.getMinutes() - 60
-        );
-
-        const total =
-            next.date - previous;
-
-        const elapsed =
-            now - previous;
-
-        const progress =
-            Math.min(
-                100,
-                Math.max(
-                    0,
-                    (elapsed / total) * 100
-                )
-            );
-
-
-        document.getElementById("progressFill")
-            .style.width =
-            `${progress}%`;
-
-
-        document.getElementById("progressPercent")
-            .textContent =
-            `${Math.round(progress)}%`;
-
-    }
-
-
-    function updateNextPanel() {
-
-        const next =
-            getNextClass();
-
-        if (!next) return;
-
-
-        document.getElementById("nextCourse")
-            .textContent =
-            next.name;
-
-
-        document.getElementById("nextCode")
-            .textContent =
-            next.code;
-
-
-        document.getElementById("nextStart")
-            .textContent =
-            next.start;
-
-
-        document.getElementById("nextVenue")
-            .textContent =
-            next.venue;
-
-
-        const now =
-            new Date();
-
-
-        if (
-            next.date.toDateString() ===
-            now.toDateString()
+        function updateTimetableVisuals(
+            now
         ) {
 
-            document.getElementById("nextDay")
-                .textContent =
-                "TODAY";
-
-        } else {
-
-            document.getElementById("nextDay")
-                .textContent =
-                dayNames[
-                    next.date.getDay()
-                ];
-
-        }
-
-    }
+            const currentDay =
+                now.getDay();
 
 
-    function renderWeek() {
-
-        const grid =
-            document.getElementById("weekGrid");
-
-        grid.innerHTML = "";
+            const currentMinutes =
+                now.getHours() * 60 +
+                now.getMinutes();
 
 
-        const now =
-            new Date();
+            document
+                .querySelectorAll(".day")
+                .forEach(dayElement => {
+
+                    const day =
+                        Number(
+                            dayElement.dataset.day
+                        );
 
 
-        const days = [
-            {
-                number: 1,
-                name: "MON"
-            },
-            {
-                number: 2,
-                name: "TUE"
-            },
-            {
-                number: 3,
-                name: "WED"
-            },
-            {
-                number: 4,
-                name: "THU"
-            },
-            {
-                number: 5,
-                name: "FRI"
-            }
-        ];
+                    dayElement.classList.toggle(
+                        "today",
+                        day === currentDay
+                    );
+
+                });
 
 
-        days.forEach(day => {
 
-            const wrapper =
-                document.createElement("div");
+            document
+                .querySelectorAll(".class")
+                .forEach(classElement => {
 
-            wrapper.className = "day";
+                    classElement.classList.remove(
+                        "active"
+                    );
 
-
-            if (now.getDay() === day.number) {
-
-                wrapper.classList.add("active");
-
-            }
-
-
-            const heading =
-                document.createElement("div");
-
-            heading.className =
-                "day-name";
+                    classElement.classList.remove(
+                        "completed"
+                    );
 
 
-            heading.innerHTML = `
-
-                <span>
-                    ${day.name}
-                </span>
-
-                ${
-                    now.getDay() === day.number
-                    ? `<span class="today">TODAY</span>`
-                    : ""
-                }
-
-            `;
+                    const code =
+                        classElement.dataset.code;
 
 
-            wrapper.appendChild(heading);
+                    const item =
+                        classes.find(
+                            course =>
+                                course.code === code
+                        );
 
 
-            const classes =
-                timetable[day.number] || [];
+                    if (!item) return;
 
 
-            if (classes.length === 0) {
+                    if (
+                        item.day !== currentDay
+                    ) {
 
-                const empty =
-                    document.createElement("div");
+                        return;
 
-                empty.style.marginTop = "25px";
+                    }
 
-                empty.style.color = "#444";
-
-                empty.style.fontFamily =
-                    "JetBrains Mono";
-
-                empty.style.fontSize = "9px";
-
-                empty.textContent =
-                    "NO CLASSES";
-
-                wrapper.appendChild(empty);
-
-            }
-
-
-            classes.forEach(cls => {
-
-                const card =
-                    document.createElement("div");
-
-                card.className =
-                    "class-card";
-
-
-                /*
-                    Check if class is completed
-                */
-
-                if (
-                    now.getDay() === day.number
-                ) {
-
-                    const currentMinutes =
-                        now.getHours() * 60 +
-                        now.getMinutes();
 
                     const start =
                         timeToMinutes(
-                            cls.start
+                            item.start
                         );
+
 
                     const end =
                         timeToMinutes(
-                            cls.end
+                            item.end
                         );
 
 
@@ -1558,7 +1791,9 @@
                         currentMinutes >= end
                     ) {
 
-                        card.classList.add("done");
+                        classElement.classList.add(
+                            "completed"
+                        );
 
                     }
 
@@ -1568,86 +1803,45 @@
                         currentMinutes < end
                     ) {
 
-                        card.classList.add("active");
+                        classElement.classList.add(
+                            "active"
+                        );
 
                     }
 
-                }
+                });
+
+        }
 
 
-                card.innerHTML = `
 
-                    <div class="class-time">
-                        ${cls.start} — ${cls.end}
-                    </div>
+        /* =========================================
+           INITIALIZE
+        ========================================= */
 
-                    <h4>
-                        ${cls.code}
-                    </h4>
-
-                    <div class="class-room">
-                        ${cls.venue}
-                    </div>
-
-                `;
-
-
-                wrapper.appendChild(card);
-
-            });
-
-
-            grid.appendChild(wrapper);
-
-        });
-
-    }
-
-
-    function updateEverything() {
+        buildTimetable();
 
         updateClock();
 
-        updateMainStatus();
-
-        updateNextPanel();
-
-        renderWeek();
-
-    }
+        updateSystem();
 
 
-    /*
-        INITIAL LOAD
-    */
+        /* =========================================
+           LIVE LOOP
+        ========================================= */
 
-    updateEverything();
-
-
-    /*
-        LIVE UPDATE EVERY SECOND
-    */
-
-    setInterval(() => {
-
-        updateClock();
-        updateMainStatus();
-        updateNextPanel();
-
-    }, 1000);
+        setInterval(
+            updateClock,
+            1000
+        );
 
 
-    /*
-        REFRESH WEEKLY STATUS EVERY MINUTE
-    */
+        setInterval(
+            updateSystem,
+            1000
+        );
 
-    setInterval(() => {
-
-        renderWeek();
-
-    }, 60000);
-
-</script>
+    </script>
 
 </body>
 </html>
